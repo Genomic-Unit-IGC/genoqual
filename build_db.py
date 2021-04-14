@@ -2,7 +2,7 @@
 
 import os
 import sys
-import commands
+import subprocess
 import getopt
 import time as timelibrary
 import datetime
@@ -17,14 +17,14 @@ def month_converter(month):
 	return months.index(month) + 1
 
 def print_help():
-	print "Help"
+	print("help")
 
 if __name__ == '__main__':
 	
 	basepath_save=sys.argv[1]
-	basepath='/afs/igc.gulbenkian.pt/folders/gen-com/USERS/UBI/'
-	print 'Basepath:', basepath
-	print 'Basepath save', basepath_save
+	basepath="/media/genomics/genomics2/Analysis" # Current working directory for genoqual
+	print(f'Basepath: {basepath}')
+	print(f'Basepath save: {basepath}')
 	#basepath='/home/mtruglio/Desktop/Test_UBI_folder'
 	folders= [ name for name in os.listdir(basepath+'/results/') if (os.path.isdir(os.path.join(basepath+'/results/', name)) and name.startswith('Run')) ]
 
@@ -39,11 +39,11 @@ if __name__ == '__main__':
 
 		data = cur.fetchone()
 
-		print "SQLite version: %s" % data
+		print(f'SQLite version: {data}')
 
-	except lite.Error, e:
+	except lite.Error as e:
 
-		print "Error %s:" % e.args[0]
+		print(f'Error: {e.args[0]}')
 		sys.exit(1)
 
 	finally:
@@ -61,9 +61,9 @@ if __name__ == '__main__':
 				
 				if os.path.exists(basepath+'/results/%s/Qiime'%f):
 					meta=1
-				if glob.glob(basepath+'/results/%s/FastQC/*_L004_R1_001*'%f)!=[]:	#Using FasdtQC output to spot multiple lanes
+				if glob.glob(basepath+'/results/%s/FastQC/*_L004_R1_001*'%f)!=[]:	#Using FastQC output to spot multiple lanes
 					nextseq=1		
-				reads_descr=commands.getoutput("grep -a2 '\[Reads\]' %s/input/%s/SampleSheet.csv | tail -n2"%(basepath,f)).split()
+				reads_descr=subprocess.getoutput("grep -a2 '\[Reads\]' %s/input/%s/SampleSheet.csv | tail -n2"%(basepath,f)).split()
 				if len(reads_descr)==2:
 					paired=1
 				else:

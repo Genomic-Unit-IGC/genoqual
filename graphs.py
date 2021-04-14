@@ -4,7 +4,7 @@ import matplotlib
 matplotlib.use('Agg')
 import os
 import sys
-import commands
+import subprocess
 import getopt
 import re
 import sqlite3 as lite
@@ -34,14 +34,14 @@ def millions(x, pos):
 	return '%1.0fM' % (x*1e-6)
 
 def print_help():
-	print '''
-The script reads in the runs database, and produces several graphs	that show run quality over time.
-Arguments:
--r: current run number (will be highlighted on graphs)
--d: db file built with build_db.py
--o: output folder for images
-	
-	'''
+	print(
+		'''
+    The script reads in the runs database, and produces several graphs	that show run quality over time.
+    Arguments:
+    -r: current run number (will be highlighted on graphs)
+    -d: db file built with build_db.py
+    -o: output folder for images
+        ''')
 
 if __name__ == '__main__':
 	
@@ -70,11 +70,11 @@ if __name__ == '__main__':
 		cur = con.cursor()
 		cur.execute('SELECT SQLITE_VERSION()')
 		data = cur.fetchone()
-		print "SQLite version: %s"%data
+		print(f"SQLite version: {data}")
 
-	except lite.Error, e:
+	except lite.Error as e:
 
-		print "Error %s:" % e.args[0]
+		print(f"Error: {e.args[0]}")
 		sys.exit(1)
 
 	finally:
@@ -97,10 +97,10 @@ if __name__ == '__main__':
 		#Flagging the run as meta if it's the case
 		if df_R1_selection['meta'].iloc[0]:
 			meta_run=True
-			print 'Meta!'
+			print('Meta!')
 		if df_R1_selection['nextseq'].iloc[0]:
 			nextseq_run=True	
-			print 'Nextseq!'
+			print('Nextseq!')
 		# 
 		df_R1_others=df_R1[df_R1.Id!=myrun]
 		stripplotR1=seaborn.stripplot(x='short_date',y='Q30_Percent', data=df_R1_others, hue='length',jitter=True, order=order)
